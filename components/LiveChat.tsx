@@ -192,7 +192,7 @@ const LiveChat: React.FC<LiveChatProps> = ({ userRole, currentUserId }) => {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-atelier-charcoal tracking-widest uppercase flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-atelier-clay" />
-              Chronicles
+              Chat
             </h2>
             {isCustomer && (
               <button 

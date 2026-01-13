@@ -177,7 +177,7 @@ const BlogManager: React.FC = () => {
       <div className="flex justify-between items-end">
         <div>
           <h2 className="text-3xl font-light tracking-[0.2em] text-atelier-charcoal uppercase leading-tight">
-            Ritual <span className="font-bold text-atelier-clay italic">Chronicles</span>
+            All <span className="font-bold text-atelier-clay italic">Blogs</span>
           </h2>
           <p className="text-atelier-taupe text-[10px] font-bold uppercase tracking-[0.4em] mt-2">Writing the legacy of PAWA for the digital void</p>
         </div>

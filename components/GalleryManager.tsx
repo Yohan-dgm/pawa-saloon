@@ -100,7 +100,7 @@ const GalleryManager: React.FC = () => {
       <div className="flex justify-between items-end">
         <div>
           <h2 className="text-3xl font-light tracking-[0.2em] text-atelier-charcoal uppercase leading-tight">
-            Visual <span className="font-bold text-atelier-clay italic">Sanctuary</span>
+            Visual <span className="font-bold text-atelier-clay italic">Gallery</span>
           </h2>
           <p className="text-atelier-taupe text-[10px] font-bold uppercase tracking-[0.4em] mt-2">Curating the aesthetic essence of PAWA</p>
         </div>

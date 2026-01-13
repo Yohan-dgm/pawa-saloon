@@ -148,7 +148,7 @@ const AdminDashboard: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Performance Chart */}
         <div className="lg:col-span-2 bg-white p-4 md:p-8 rounded-[32px] md:rounded-[40px] border border-atelier-sand shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -195,7 +195,7 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* AI Insights Card */}
-        <div className="bg-atelier-charcoal p-6 md:p-8 rounded-[32px] md:rounded-[40px] text-white shadow-xl relative overflow-hidden flex flex-col min-h-[400px]">
+        {/* <div className="bg-atelier-charcoal p-6 md:p-8 rounded-[32px] md:rounded-[40px] text-white shadow-xl relative overflow-hidden flex flex-col min-h-[400px]">
           <div className="absolute top-0 right-0 p-12 opacity-5 hidden md:block">
             <BrainCircuit className="w-64 h-64" />
           </div>
@@ -240,7 +240,7 @@ const AdminDashboard: React.FC = () => {
           >
             Refresh Predictions
           </button>
-        </div>
+        </div> */}
       </div>
 
       <InventoryInsights />

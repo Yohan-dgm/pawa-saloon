@@ -94,7 +94,7 @@ const AppointmentManager: React.FC<AppointmentManagerProps> = ({ user, role }) =
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h2 className="text-3xl font-light tracking-[0.2em] text-atelier-charcoal uppercase leading-tight">
-            Ritual <span className="font-bold text-atelier-clay italic">Management</span>
+            Apportionment <span className="font-bold text-atelier-clay italic">Management</span>
           </h2>
           <p className="text-atelier-taupe text-[10px] font-bold uppercase tracking-[0.4em] mt-2">
             {role === UserRole.ADMIN ? "Overseeing the sanctuary's temporal flow" : "Your upcoming artisan engagements"}

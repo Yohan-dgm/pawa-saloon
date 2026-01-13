@@ -112,7 +112,7 @@ const ServicesManager: React.FC<ServicesManagerProps> = ({ role = UserRole.ADMIN
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h2 className="text-3xl font-light tracking-[0.2em] text-atelier-charcoal uppercase leading-tight">
-            Ritual <span className="font-bold text-atelier-clay italic">Collection</span>
+            All <span className="font-bold text-atelier-clay italic">Services</span>
           </h2>
           <p className="text-atelier-taupe text-[10px] font-bold uppercase tracking-[0.4em] mt-2">
             Manage your salon's signature services

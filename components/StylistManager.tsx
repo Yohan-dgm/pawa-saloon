@@ -166,7 +166,7 @@ const StylistManager: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-end">
         <div>
-          <h2 className="text-2xl font-light tracking-[0.2em] text-atelier-charcoal uppercase leading-tight">Master <span className="font-bold text-atelier-clay">Artisans</span></h2>
+          <h2 className="text-2xl font-light tracking-[0.2em] text-atelier-charcoal uppercase leading-tight">All <span className="font-bold text-atelier-clay">Stylists</span></h2>
           <p className="text-atelier-taupe text-xs font-bold uppercase tracking-widest mt-1">Directing schedules and sanctuary ritual flow</p>
         </div>
         <button 
