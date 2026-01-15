@@ -39,3 +39,24 @@ body {
   animation: swing 0.5s ease-in-out;
   transform-origin: top center;
 }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s infinite linear;
+}
+
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+.animate-scan {
+  animation: scan 2s infinite linear;
+  position: absolute;
+  left: 0;
+  right: 0;
+}

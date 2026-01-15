@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from './Navbar';
 import Hero from './Hero';
 import AIFeature from './AIFeature';
@@ -7,14 +6,22 @@ import Services from './Services';
 import Portfolio from './Portfolio';
 import Chronicles from './Chronicles';
 import About from './About';
-import { motion } from 'framer-motion';
-import { MapPin, Phone, Instagram, Facebook, Twitter, Mail } from 'lucide-react';
+import PolicyModals, { PolicyType } from './PolicyModals';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Phone, Instagram, Facebook, Mail } from 'lucide-react';
 
 interface LandingPageProps {
   onEnterApp: () => void;
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
+  const [activePolicy, setActivePolicy] = useState<PolicyType | null>(null);
+
+  const socialLinks = [
+    { icon: Instagram, href: 'https://www.instagram.com/pawaatelier/', label: 'Instagram' },
+    { icon: Facebook, href: 'https://www.facebook.com/hairbypawanperera/', label: 'Facebook' }
+  ];
+
   return (
     <div className="relative w-full overflow-x-hidden selection:bg-atelier-sand selection:text-atelier-charcoal scroll-smooth bg-atelier-cream">
       <Navbar onLogin={onEnterApp} />
@@ -113,10 +120,16 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
                 A sanctuary of style and silence. We blend ancient grooming traditions with futuristic intelligence to reveal your truest aesthetic.
               </p>
               <div className="flex gap-4">
-                {[Instagram, Facebook, Twitter].map((Icon, i) => (
-                  <button key={i} className="p-4 bg-white/5 rounded-full hover:bg-atelier-clay transition-all border border-white/5 text-white">
-                    <Icon className="w-5 h-5" />
-                  </button>
+                {socialLinks.map((social, i) => (
+                  <a 
+                    key={i} 
+                    href={social.href} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="p-4 bg-white/5 rounded-full hover:bg-atelier-clay transition-all border border-white/5 text-white"
+                  >
+                    <social.icon className="w-5 h-5" />
+                  </a>
                 ))}
               </div>
             </div>
@@ -150,13 +163,23 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] font-bold uppercase tracking-[0.4em] text-atelier-sand/30 text-center md:text-left">
             <p>&copy; 2024 PAWA ATELIER LUXURY. ALL RIGHTS RESERVED.</p>
             <div className="flex gap-10">
-              <span className="cursor-pointer hover:text-white transition-colors">Privacy</span>
-              <span className="cursor-pointer hover:text-white transition-colors">Legal</span>
-              <span className="cursor-pointer hover:text-white transition-colors">Terms</span>
+              <span onClick={() => setActivePolicy('privacy')} className="cursor-pointer hover:text-white transition-colors uppercase">Privacy</span>
+              <span onClick={() => setActivePolicy('legal')} className="cursor-pointer hover:text-white transition-colors uppercase">Legal</span>
+              <span onClick={() => setActivePolicy('terms')} className="cursor-pointer hover:text-white transition-colors uppercase">Terms</span>
             </div>
           </div>
         </div>
       </footer>
+
+      {/* Policy Modals */}
+      <AnimatePresence>
+        {activePolicy && (
+          <PolicyModals 
+            type={activePolicy} 
+            onClose={() => setActivePolicy(null)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

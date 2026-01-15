@@ -93,56 +93,139 @@ const VirtualTryOn: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-24">
-      <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-        <div className="space-y-2">
-          <h2 className="text-4xl font-light tracking-[0.2em] text-atelier-charcoal uppercase leading-tight">
-            AI <span className="font-bold text-atelier-clay italic">Oracle</span>
+    <div className="max-w-[1400px] mx-auto space-y-6 pb-12">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+        <div className="space-y-1">
+          <h2 className="text-3xl font-light tracking-[0.2em] text-atelier-charcoal uppercase leading-tight">
+            AI <span className="font-bold text-atelier-clay italic">hairstyle recommendation </span>
           </h2>
-          <p className="text-atelier-taupe text-[10px] font-bold uppercase tracking-[0.4em]">
+          <p className="text-atelier-taupe text-[9px] font-bold uppercase tracking-[0.4em]">
             Neural gender-aware styling & aesthetic visualization
           </p>
         </div>
-        <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full border border-atelier-sand shadow-sm">
-          <Info className="w-4 h-4 text-atelier-clay" />
-          <p className="text-[9px] font-bold text-atelier-taupe uppercase tracking-widest">
-            {isAnalyzing ? "Oracle is analyzing..." : "Front-facing, well-lit portraits yield the truest results"}
+        <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-atelier-sand shadow-sm">
+          <Info className="w-3.5 h-3.5 text-atelier-clay" />
+          <p className="text-[8px] font-bold text-atelier-taupe uppercase tracking-widest">
+            {isAnalyzing ? "Oracle is analyzing..." : "Front-facing portraits yield truest results"}
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-        {/* Input Area */}
-        <div className="space-y-10">
-          <div className="relative aspect-[4/5] bg-white rounded-[60px] border border-atelier-sand shadow-sm overflow-hidden group">
-            <div className="absolute inset-0 bg-atelier-cream/30 -z-10" />
-            
+      {/* Recommendations - Full Width Top */}
+      <AnimatePresence>
+        {image && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full space-y-4"
+          >
+            {analysisResult && (
+              <div className="flex items-center gap-4 bg-white/50 px-6 py-3 rounded-3xl border border-atelier-sand/50 shadow-sm overflow-x-auto no-scrollbar">
+                <div className="flex items-center gap-2 text-[9px] font-black text-atelier-clay uppercase tracking-[0.3em] shrink-0 border-r border-atelier-sand pr-4">
+                  <Sparkles className="w-3 h-3" />
+                  {analysisResult.gender?.toUpperCase()} {analysisResult.faceShape}
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  {analysisResult.features.slice(0, 3).map((f, i) => (
+                    <span key={i} className="px-2 py-0.5 bg-atelier-cream rounded-full text-[7px] font-bold text-atelier-taupe uppercase tracking-widest border border-atelier-sand">
+                      {f}
+                    </span>
+                  ))}
+                </div>
+                <span className="text-[9px] font-bold text-atelier-charcoal uppercase tracking-widest ml-auto shrink-0">{analysisResult.skinTone} Tone</span>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <p className="text-[9px] font-black text-atelier-clay uppercase tracking-[0.4em] px-2 flex items-center justify-between">
+                <span>Recommended Rituals</span>
+              </p>
+              
+              <div className="relative min-h-[60px]">
+                {recommendations.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                    {recommendations.map(hair => (
+                      <motion.button
+                        key={hair.id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => triggerTransformation(hair)}
+                        className="text-left bg-white p-3 rounded-2xl border border-atelier-sand shadow-sm hover:border-atelier-clay hover:shadow-md transition-all group relative overflow-hidden"
+                        disabled={loading}
+                      >
+                        <div className="relative z-10">
+                          <h4 className="text-[9px] font-bold text-atelier-charcoal uppercase tracking-widest group-hover:text-atelier-clay truncate">{hair.name}</h4>
+                          <div className="flex items-center gap-1.5 text-[7px] font-bold text-atelier-clay uppercase tracking-widest opacity-60 mt-1">
+                            <Sparkles className="w-2 h-2" /> Select
+                          </div>
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="w-full bg-white/30 backdrop-blur-sm rounded-[30px] border border-atelier-sand/50 p-6 flex flex-col items-center justify-center space-y-3 overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-atelier-sand/10 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+                    <div className="relative flex items-center gap-4">
+                      <div className="relative">
+                        <RefreshCw className="w-6 h-6 text-atelier-clay animate-spin" />
+                        <div className="absolute inset-0 blur-md bg-atelier-clay/20 animate-pulse rounded-full" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-atelier-charcoal uppercase tracking-[0.3em] ">Consulting the Oracle</p>
+                        <p className="text-[7px] text-atelier-taupe font-bold uppercase tracking-widest">Identifying your unique aesthetic...</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Main Container - Side by Side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center justify-items-center h-auto">
+        {/* Left column: Source Image */}
+        <div className="space-y-4 w-full max-w-xl">
+          <div className="relative aspect-square md:aspect-[4/5] bg-white rounded-[40px] border border-atelier-sand shadow-sm overflow-hidden group max-h-[650px] w-full flex items-center justify-center mx-auto">
             {image ? (
               <>
                 <img src={image} className="w-full h-full object-cover animate-in fade-in duration-700" alt="Source" />
+                
+                {/* Scanning Animation */}
+                {(isAnalyzing || loading) && (
+                  <div className="absolute inset-0 pointer-events-none">
+                    <div className="w-full h-1 bg-atelier-clay/60 shadow-[0_0_15px_rgba(176,141,121,0.8)] animate-scan relative z-20" />
+                    <div className="absolute inset-0 bg-atelier-clay/5 animate-pulse" />
+                  </div>
+                )}
+
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <button 
                     onClick={() => { setImage(null); setResult(null); setRecommendations([]); setAnalysisResult(null); }}
-                    className="bg-white/90 p-5 rounded-full hover:bg-white hover:scale-110 transition-all shadow-2xl"
+                    className="bg-white/90 p-4 rounded-full hover:bg-white hover:scale-110 transition-all shadow-2xl"
                   >
-                    <X className="w-6 h-6 text-atelier-clay" />
+                    <X className="w-5 h-5 text-atelier-clay" />
                   </button>
                 </div>
               </>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center p-12 text-center space-y-8">
-                <div className="w-24 h-24 bg-atelier-nude rounded-full flex items-center justify-center shadow-sm border border-atelier-sand">
-                  <Camera className="w-10 h-10 text-atelier-clay" />
+              <div className="h-full flex flex-col items-center justify-center p-8 text-center space-y-6">
+                <div className="w-20 h-20 bg-atelier-nude rounded-full flex items-center justify-center shadow-sm border border-atelier-sand">
+                  <Camera className="w-8 h-8 text-atelier-clay" />
                 </div>
-                <div className="space-y-3">
-                  <p className="text-lg font-light text-atelier-charcoal uppercase tracking-widest">Initiate Visualization</p>
-                  <p className="text-[10px] text-atelier-taupe font-bold uppercase tracking-[0.2em] max-w-[200px] mx-auto leading-relaxed">
-                    Upload your essence for gender-aware transformation
+                <div className="space-y-2">
+                  <p className="text-base font-light text-atelier-charcoal uppercase tracking-widest">Initiate Visualization</p>
+                  <p className="text-[9px] text-atelier-taupe font-bold uppercase tracking-[0.2em] max-w-[160px] mx-auto leading-relaxed">
+                    Upload your essence for transformation
                   </p>
                 </div>
                 <button 
                   onClick={() => fileInputRef.current?.click()}
-                  className="bg-atelier-charcoal text-white px-10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-atelier-clay transition-all shadow-xl flex items-center gap-3"
+                  className="bg-atelier-charcoal text-white px-8 py-3 rounded-xl text-[9px] font-bold uppercase tracking-[0.3em] hover:bg-atelier-clay transition-all shadow-xl flex items-center gap-3"
                 >
                   <Upload className="w-4 h-4" /> Select Portrait
                 </button>
@@ -150,71 +233,11 @@ const VirtualTryOn: React.FC = () => {
               </div>
             )}
           </div>
-
-          <AnimatePresence>
-            {image && (
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="space-y-6"
-              >
-                {analysisResult && (
-                  <div className="bg-white rounded-[40px] p-8 border border-atelier-sand shadow-sm space-y-4">
-                    <div className="flex justify-between items-center text-[10px] font-black text-atelier-clay uppercase tracking-[0.3em]">
-                      <span className="flex items-center gap-2">
-                        <Sparkles className="w-3 h-3" />
-                        {analysisResult.gender?.toUpperCase()} {analysisResult.faceShape} Analysis
-                      </span>
-                      <span className="text-atelier-charcoal">{analysisResult.skinTone} Tone</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {analysisResult.features.map((f, i) => (
-                        <span key={i} className="px-3 py-1 bg-atelier-cream rounded-full text-[8px] font-bold text-atelier-taupe uppercase tracking-widest border border-atelier-sand">
-                          {f}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-4">
-                  <p className="text-[10px] font-black text-atelier-clay uppercase tracking-[0.4em] px-4">AI Recommended Rituals (Select to Manifest)</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {recommendations.length > 0 ? (
-                      recommendations.map(hair => (
-                        <motion.button
-                          key={hair.id}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => triggerTransformation(hair)}
-                          className="text-left bg-white p-6 rounded-[30px] border border-atelier-sand shadow-sm hover:border-atelier-clay hover:shadow-md transition-all group relative overflow-hidden"
-                          disabled={loading}
-                        >
-                          <div className="space-y-2 relative z-10">
-                            <h4 className="text-[11px] font-bold text-atelier-charcoal uppercase tracking-widest group-hover:text-atelier-clay transition-colors">{hair.name}</h4>
-                            <p className="text-[9px] text-atelier-taupe leading-relaxed line-clamp-2">{hair.description}</p>
-                            <div className="pt-2 flex items-center gap-2 text-[8px] font-bold text-atelier-clay uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                              <Sparkles className="w-3 h-3" /> Invoke Style
-                            </div>
-                          </div>
-                          <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-atelier-cream rounded-full blur-2xl group-hover:bg-atelier-nude transition-colors" />
-                        </motion.button>
-                      ))
-                    ) : (
-                      [1,2,3,4,5,6].map(i => (
-                        <div key={i} className="h-32 bg-atelier-cream/50 rounded-[30px] animate-pulse border border-atelier-sand/50" />
-                      ))
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
-        {/* Output Area */}
-        <div className="space-y-10">
-          <div className="relative aspect-[4/5] bg-atelier-charcoal rounded-[60px] overflow-hidden shadow-2xl flex items-center justify-center border-8 border-atelier-nude">
+        {/* Right column: Target Result */}
+        <div className="space-y-4 w-full max-w-xl">
+          <div className="relative aspect-square md:aspect-[4/5] bg-atelier-charcoal rounded-[40px] overflow-hidden shadow-2xl flex items-center justify-center border-4 border-atelier-nude max-h-[650px] w-full mx-auto">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
             
             {result ? (
@@ -226,14 +249,14 @@ const VirtualTryOn: React.FC = () => {
                 alt="Transformation"
               />
             ) : (
-              <div className="text-center space-y-6 p-12 relative z-10">
-                <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto border border-white/10">
-                  <Sparkles className="w-10 h-10 text-atelier-clay" />
+              <div className="text-center space-y-4 p-8 relative z-10">
+                <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto border border-white/10">
+                  <Sparkles className="w-8 h-8 text-atelier-clay" />
                 </div>
-                <div className="space-y-2">
-                  <p className="text-atelier-sand/40 text-[10px] font-bold uppercase tracking-[0.5em]">Neural Canvas</p>
-                  <p className="text-atelier-sand/20 text-[9px] font-medium uppercase tracking-widest max-w-[180px] mx-auto">
-                    Transformations will materialize within this sanctuary
+                <div className="space-y-1">
+                  <p className="text-atelier-sand/40 text-[9px] font-bold uppercase tracking-[0.5em]">Neural Canvas</p>
+                  <p className="text-atelier-sand/20 text-[8px] font-medium uppercase tracking-widest max-w-[150px] mx-auto">
+                    Transformations will materialize here
                   </p>
                 </div>
               </div>
@@ -245,15 +268,15 @@ const VirtualTryOn: React.FC = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-atelier-charcoal/90 backdrop-blur-md z-20 flex flex-col items-center justify-center text-white space-y-8"
+                  className="absolute inset-0 bg-atelier-charcoal/90 backdrop-blur-md z-20 flex flex-col items-center justify-center text-white space-y-6"
                 >
                   <div className="relative">
-                    <div className="w-24 h-24 border-2 border-atelier-clay/30 rounded-full animate-ping absolute inset-0" />
-                    <div className="w-24 h-24 border-t-2 border-atelier-clay rounded-full animate-spin" />
+                    <div className="w-20 h-20 border-2 border-atelier-clay/30 rounded-full animate-ping absolute inset-0" />
+                    <div className="w-20 h-20 border-t-2 border-atelier-clay rounded-full animate-spin" />
                   </div>
-                  <div className="text-center space-y-2 px-8">
-                    <p className="text-xl font-light tracking-[0.3em] uppercase">Sculpting Aesthetic</p>
-                    <p className="text-[9px] text-atelier-clay font-bold uppercase tracking-[0.4em] animate-pulse">
+                  <div className="text-center space-y-1.5 px-6">
+                    <p className="text-lg font-light tracking-[0.3em] uppercase">Sculpting</p>
+                    <p className="text-[8px] text-atelier-clay font-bold uppercase tracking-[0.4em] animate-pulse">
                       {[
                         "Analyzing facial geometry...",
                         "Identifying hair boundaries...",
@@ -267,50 +290,53 @@ const VirtualTryOn: React.FC = () => {
               )}
             </AnimatePresence>
           </div>
-          
+
           <AnimatePresence>
             {result && !loading && (
               <motion.div 
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex gap-4"
+                className="flex gap-3"
               >
                 <button 
                   onClick={() => setResult(null)}
-                  className="flex-1 bg-white border border-atelier-sand py-5 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-atelier-charcoal hover:bg-atelier-cream transition-all flex items-center justify-center gap-2 shadow-sm"
+                  className="flex-1 bg-white border border-atelier-sand py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest text-atelier-charcoal hover:bg-atelier-cream transition-all flex items-center justify-center gap-2"
                 >
-                  <X className="w-4 h-4" /> Clear Vision
+                  <X className="w-3.5 h-3.5" /> Clear
                 </button>
                 <button 
-                  className="flex-1 bg-atelier-charcoal text-white py-5 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-atelier-clay transition-all flex items-center justify-center gap-2 shadow-xl"
+                  className="flex-1 bg-atelier-charcoal text-white py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-atelier-clay transition-all flex items-center justify-center gap-2 shadow-lg"
                   onClick={() => alert('Ritual saved to your private lookbook.')}
                 >
-                  <Share2 className="w-4 h-4" /> Archive Look
+                  <Share2 className="w-3.5 h-3.5" /> Archive
                 </button>
               </motion.div>
             )}
           </AnimatePresence>
-
-          {lookbook.length > 0 && (
-            <div className="bg-white rounded-[40px] p-8 border border-atelier-sand shadow-sm space-y-6">
-              <h4 className="text-[10px] font-black text-atelier-clay uppercase tracking-[0.3em]">Session Lookbook</h4>
-              <div className="grid grid-cols-4 gap-4">
-                {lookbook.map((img, idx) => (
-                  <div key={idx} className="aspect-square rounded-2xl overflow-hidden border border-atelier-sand cursor-pointer hover:border-atelier-clay transition-all" onClick={() => setResult(img)}>
-                    <img src={img} className="w-full h-full object-cover" alt={`Look ${idx}`} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="bg-atelier-nude/30 rounded-[40px] p-8 border border-atelier-sand/50">
-            <h4 className="text-[10px] font-black text-atelier-clay uppercase tracking-[0.3em] mb-4">Oracle Wisdom</h4>
-            <p className="text-[11px] text-atelier-taupe leading-relaxed italic">
-              "True style is the intersection of neural precision and individual essence. The Oracle predicts, but the manifestation is your destiny."
-            </p>
-          </div>
         </div>
+      </div>
+
+      {/* Compact Lookbook & Wisdom */}
+      <div className="flex flex-col lg:flex-row gap-6">
+        {lookbook.length > 0 && (
+          <div className="flex-1 bg-white rounded-[32px] p-6 border border-atelier-sand shadow-sm flex items-center gap-6 overflow-hidden">
+            <h4 className="text-[9px] font-black text-atelier-clay uppercase tracking-[0.3em] shrink-0 rotate-180 [writing-mode:vertical-lr]">Lookbook</h4>
+            <div className="flex gap-3 overflow-x-auto no-scrollbar py-2">
+              {lookbook.map((img, idx) => (
+                <div key={idx} className="w-16 h-16 rounded-xl overflow-hidden border border-atelier-sand cursor-pointer hover:border-atelier-clay shrink-0" onClick={() => setResult(img)}>
+                  <img src={img} className="w-full h-full object-cover" alt={`Look ${idx}`} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* <div className="flex-1 bg-atelier-nude/30 rounded-[32px] p-6 border border-atelier-sand/50 flex flex-col justify-center">
+          <h4 className="text-[9px] font-black text-atelier-clay uppercase tracking-[0.3em] mb-2">Oracle Wisdom</h4>
+          <p className="text-[10px] text-atelier-taupe leading-relaxed italic">
+            "The Oracle predicts, but your essence is destiny."
+          </p>
+        </div> */}
       </div>
     </div>
   );
