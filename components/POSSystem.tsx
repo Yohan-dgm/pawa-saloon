@@ -321,15 +321,29 @@ const POSSystem: React.FC = () => {
     document.body.appendChild(iframe);
     
     iframe.onload = () => {
-      iframe.contentWindow?.print();
-      // Cleanup after print dialog closes
+      // Small delay to ensure the print dialog is ready to be handled by the browser
       setTimeout(() => {
-        document.body.removeChild(iframe);
-        URL.revokeObjectURL(url);
-        if (autoCloseModal) {
-          setShowSuccess(false);
+        iframe.contentWindow?.print();
+        
+        // Cleanup after print dialog closes - increased timeout to prevent premature removal
+        // especially on the first load when the browser might be slower
+        const cleanup = () => {
+          if (document.body.contains(iframe)) {
+            document.body.removeChild(iframe);
+            URL.revokeObjectURL(url);
+          }
+          if (autoCloseModal) {
+            setShowSuccess(false);
+          }
+        };
+
+        // If 'onafterprint' is supported, use it, otherwise fallback to long timeout
+        if ('onafterprint' in (iframe.contentWindow || {})) {
+          (iframe.contentWindow as any).onafterprint = cleanup;
+        } else {
+          setTimeout(cleanup, 3000);
         }
-      }, 1000);
+      }, 500);
     };
   };
 
@@ -420,13 +434,13 @@ const POSSystem: React.FC = () => {
       </div>
 
       {/* Cart Area */}
-      <div className="w-full lg:w-[450px] bg-white rounded-[32px] md:rounded-[50px] border border-atelier-sand shadow-2xl flex flex-col overflow-hidden">
-        <div className="p-8 border-b border-atelier-sand flex justify-between items-center">
+      <div className="w-full lg:w-[380px] bg-white rounded-[32px] md:rounded-[40px] border border-atelier-sand shadow-2xl flex flex-col overflow-hidden">
+        <div className="p-5 border-b border-atelier-sand flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="bg-atelier-nude p-3 rounded-2xl">
-              <ShoppingCart className="w-6 h-6 text-atelier-clay" />
+            <div className="bg-atelier-nude p-2 rounded-xl">
+              <ShoppingCart className="w-5 h-5 text-atelier-clay" />
             </div>
-            <h3 className="text-lg font-bold text-atelier-charcoal uppercase tracking-widest">Current Cart</h3>
+            <h3 className="text-base font-bold text-atelier-charcoal uppercase tracking-widest">Cart</h3>
           </div>
           <div className="flex flex-col items-end gap-2">
             <span className="bg-atelier-cream px-4 py-1.5 rounded-full text-[10px] font-black text-atelier-clay uppercase tracking-widest">
@@ -444,20 +458,20 @@ const POSSystem: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar">
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-40">
-              <Package className="w-16 h-16 text-atelier-sand" />
-              <p className="text-xs font-bold uppercase tracking-widest text-atelier-sand">Cart is empty</p>
+              <Package className="w-12 h-12 text-atelier-sand" />
+              <p className="text-[10px] font-bold uppercase tracking-widest text-atelier-sand">Cart is empty</p>
             </div>
           ) : (
             cart.map(item => (
-              <div key={item.id} className="flex items-center gap-4 group animate-in slide-in-from-right-4">
-                <div className="w-16 h-16 bg-atelier-nude rounded-2xl overflow-hidden shrink-0">
+              <div key={item.id} className="flex items-center gap-3 group animate-in slide-in-from-right-4">
+                <div className="w-12 h-12 bg-atelier-nude rounded-xl overflow-hidden shrink-0">
                   {item.image_url ? (
                     <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center"><Package className="w-6 h-6 text-atelier-clay" /></div>
+                    <div className="w-full h-full flex items-center justify-center"><Package className="w-5 h-5 text-atelier-clay" /></div>
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -475,61 +489,8 @@ const POSSystem: React.FC = () => {
           )}
         </div>
 
-        <div className="p-8 bg-atelier-cream/50 border-t border-atelier-sand space-y-6">
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-atelier-clay uppercase tracking-widest ml-1">Customer Selection</label>
-            <div className="relative">
-              {selectedCustomer ? (
-                <div className="flex items-center justify-between bg-white border-2 border-atelier-clay rounded-2xl py-3 px-5 animate-in fade-in zoom-in-95">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-atelier-clay/10 p-2 rounded-full">
-                      <UserIcon className="w-4 h-4 text-atelier-clay" />
-                    </div>
-                    <span className="text-xs font-bold text-atelier-charcoal">{selectedCustomer.full_name}</span>
-                  </div>
-                  <button 
-                    onClick={() => setSelectedCustomer(null)}
-                    className="p-1 hover:bg-atelier-cream rounded-full transition-colors"
-                  >
-                    <X className="w-4 h-4 text-atelier-sand" />
-                  </button>
-                </div>
-              ) : (
-                <div className="relative">
-                  <UserIcon className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-atelier-sand" />
-                  <input 
-                    type="text" 
-                    placeholder="Search customer name or email..." 
-                    className="w-full bg-white border-2 border-atelier-sand focus:border-atelier-clay rounded-2xl py-3 pl-12 pr-6 text-xs outline-none transition-all"
-                    value={customerSearch}
-                    onChange={e => {
-                      setCustomerSearch(e.target.value);
-                      setShowCustomerDropdown(true);
-                    }}
-                    onFocus={() => setShowCustomerDropdown(true)}
-                  />
-                  {showCustomerDropdown && customers.length > 0 && (
-                    <div className="absolute bottom-full left-0 right-0 mb-2 bg-white border border-atelier-sand rounded-2xl shadow-2xl overflow-hidden z-50 animate-in slide-in-from-bottom-2">
-                      {customers.map(c => (
-                        <div 
-                          key={c.id}
-                          onClick={() => {
-                            setSelectedCustomer(c);
-                            setShowCustomerDropdown(false);
-                            setCustomerSearch('');
-                          }}
-                          className="px-6 py-4 hover:bg-atelier-cream cursor-pointer border-b border-atelier-sand last:border-0 transition-colors"
-                        >
-                          <p className="text-xs font-bold text-atelier-charcoal">{c.full_name}</p>
-                          <p className="text-[10px] text-atelier-taupe">{c.email}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+        <div className="p-5 bg-atelier-cream/50 border-t border-atelier-sand space-y-4">
+          {/* Customer Selection hidden per request */}
 
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-bold text-atelier-taupe uppercase tracking-widest">

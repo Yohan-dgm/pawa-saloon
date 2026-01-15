@@ -107,7 +107,7 @@ const SignupPage: React.FC<SignupPageProps> = ({ onSignupSuccess, onReturnHome, 
         </div>
 
         {/* Social Options */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* <div className="grid grid-cols-2 gap-4">
           <button className="flex items-center justify-center gap-3 py-4 px-6 border-2 border-atelier-cream rounded-2xl hover:bg-atelier-cream transition-all group">
             <Chrome className="w-4 h-4 text-atelier-clay" />
             <span className="text-[10px] font-bold uppercase tracking-widest">Google</span>
@@ -116,7 +116,7 @@ const SignupPage: React.FC<SignupPageProps> = ({ onSignupSuccess, onReturnHome, 
             <Globe className="w-4 h-4 text-atelier-clay" />
             <span className="text-[10px] font-bold uppercase tracking-widest">Facebook</span>
           </button>
-        </div>
+        </div> */}
 
         <div className="relative flex items-center py-2">
           <div className="flex-grow border-t border-atelier-sand"></div>

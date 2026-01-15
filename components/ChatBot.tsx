@@ -55,10 +55,10 @@ const ChatBot: React.FC = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-tr from-indigo-600 to-purple-600 text-white p-4 rounded-2xl shadow-2xl hover:scale-110 active:scale-95 transition-all group"
+          className="bg-gradient-to-tr from-red-600 to-red-800 text-white p-4 rounded-2xl shadow-2xl hover:scale-110 active:scale-95 transition-all group flex items-center justify-center"
         >
-          <div className="relative">
-            <MessageCircle className="w-7 h-7" />
+          <div className="relative flex items-center justify-center">
+            <Bot className="w-7 h-7" />
             <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white animate-pulse"></span>
           </div>
         </button>
@@ -66,7 +66,7 @@ const ChatBot: React.FC = () => {
 
       {isOpen && (
         <div className="bg-white rounded-[32px] shadow-2xl w-85 md:w-96 flex flex-col border border-gray-100 overflow-hidden animate-in slide-in-from-bottom-10 duration-300">
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-5 text-white flex justify-between items-center shrink-0">
+          <div className="bg-gradient-to-r from-red-600 to-red-800 p-5 text-white flex justify-between items-center shrink-0">
             <div className="flex items-center space-x-3">
               <div className="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
                 <Bot className="w-6 h-6" />
